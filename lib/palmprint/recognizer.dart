@@ -34,7 +34,7 @@ class _RecognizerState extends State<Recognizer> {
 
   Widget _viewImage(imgPath){
     if (_imgPath == null){
-      return const Text("请选择图片");
+      return const Divider();
     }
     return Image.file(File(_imgPath.path));
   }
