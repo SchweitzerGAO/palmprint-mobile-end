@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 class DataCollect extends StatefulWidget {
   const DataCollect({Key? key}) : super(key: key);
 
@@ -13,6 +14,7 @@ class DataCollect extends StatefulWidget {
 class _DataCollectState extends State<DataCollect> {
   var _imgPath;
   final _picker = ImagePicker();
+  final _dio = Dio();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class _DataCollectState extends State<DataCollect> {
 
   Widget _viewImage(imgPath){
     if (_imgPath == null){
-      return const Text("请选择图片");
+      return const Divider();
     }
     return Image.file(File(_imgPath.path));
   }
@@ -54,7 +56,32 @@ class _DataCollectState extends State<DataCollect> {
   }
 
   void _register() async{
+      if(_imgPath == null){
+        Fluttertoast.showToast(
+            msg: "请选择图片",
+            gravity: ToastGravity.CENTER,
+            textColor: Colors.white);
+        return;
+      }
+      String path = _imgPath.path;
+      var name = path.substring(path.lastIndexOf("/") + 1, path.length);
+      FormData formData = FormData.fromMap({
+        "file": await MultipartFile.fromFile(path, filename:name)
+      });
 
+      var response = await _dio.post("http://127.0.0.1:5000/register", data: formData);
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(
+            msg: "掌纹信息上传成功",
+            gravity: ToastGravity.CENTER,
+            textColor: Colors.white);
+      }
+      else{
+        Fluttertoast.showToast(
+            msg: "掌纹信息上传失败",
+            gravity: ToastGravity.CENTER,
+            textColor: Colors.white);
+      }
   }
 }
 
