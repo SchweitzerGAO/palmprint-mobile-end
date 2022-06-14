@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -57,35 +58,46 @@ class _RecognizerState extends State<Recognizer> {
     if(_imgPath == null){
       Fluttertoast.showToast(
           msg: "请选择图片",
-          gravity: ToastGravity.CENTER,
-          textColor: Colors.grey);
+          gravity: ToastGravity.BOTTOM,
+          textColor: Colors.white);
       return;
     }
     String path = _imgPath.path;
-    var name = path.substring(path.lastIndexOf("/") + 1, path.length);
-    FormData formData = FormData.fromMap({
-      "file": await MultipartFile.fromFile(path, filename:name)
-    });
 
-    var response = await _dio.post("http://127.0.0.1:5000/recognize", data: formData);
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(path, filename:'recognize.jpg')
+    });
+    if (kDebugMode) {
+      print(formData);
+    }
+    var response = await _dio.post("http://192.168.1.101:5000/recognize", data: formData);
     if (response.statusCode == 200) {
-      if (response.data['result'] == true){
-        Fluttertoast.showToast(
-            msg: "验证通过",
-            gravity: ToastGravity.CENTER,
-            textColor: Colors.white);
+      if(response.data['code']==200){
+        if (response.data['result'] == true){
+          var name =response.data['name'];
+          Fluttertoast.showToast(
+              msg: name+'验证通过',
+              gravity: ToastGravity.BOTTOM,
+              textColor: Colors.white);
+        }
+        else {
+          Fluttertoast.showToast(
+              msg: "验证未通过",
+              gravity: ToastGravity.BOTTOM,
+              textColor: Colors.white);
+        }
       }
-      else {
+      else{
         Fluttertoast.showToast(
-            msg: "验证未通过",
-            gravity: ToastGravity.CENTER,
+            msg: '未检测到手掌',
+            gravity: ToastGravity.BOTTOM,
             textColor: Colors.white);
       }
     }
     else{
       Fluttertoast.showToast(
           msg: "图片上传失败",
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           textColor: Colors.white);
     }
   }

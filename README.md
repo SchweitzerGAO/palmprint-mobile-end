@@ -17,6 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## TODOS
 
-- [ ] Learning the basic usages of Dart
-- [ ] The palmprint register page
-- [ ] The palmprint recognition page
+- [x] Learning the basic usages of Dart
+- [x] The palmprint register page
+- [x] The palmprint recognition page
+- [x] The palmprint management page
