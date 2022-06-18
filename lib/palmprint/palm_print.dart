@@ -26,6 +26,7 @@ class IndexPage extends StatefulWidget {
   State<IndexPage> createState() => _IndexPageState();
 }
 
+
 class _IndexPageState extends State<IndexPage> {
   final List<BottomNavigationBarItem> bottomNavItems = [
     const BottomNavigationBarItem(
