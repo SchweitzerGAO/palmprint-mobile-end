@@ -1,6 +1,6 @@
 # palm_mobile
 
-A new Flutter project.
+This project is capable of recognizing the palmprint of a certain person and verify the identification.  
 
 ## Getting Started
 
